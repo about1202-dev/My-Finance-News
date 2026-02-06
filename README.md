@@ -1,1 +1,2 @@
-# My-Finance-News
+# 全球財經新聞看板
+
