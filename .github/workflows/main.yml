@@ -1,0 +1,28 @@
+name: Get Finance News
+
+on:
+  schedule:
+    # 這裡設定每 6 小時自動抓取一次 (國際標準時間)
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # 這行很重要，讓你可以手動點擊「立即更新」
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Pull RSS News
+        uses: gautamkrishnar/blog-post-workflow@master
+        with:
+          # 在這裡放入你想訂閱的 RSS 網址，用逗號隔開
+          feed_list: "https://rsshub.app/wallstreetcn/news/global,https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10000664"
+          max_post_count: 15 # 顯示最近 15 則新聞
+
+      - name: Update README
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git commit -am "Update latest news" || exit 0
+          git push
